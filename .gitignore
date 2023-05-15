@@ -1,0 +1,11 @@
+aws/localstack/env
+.DS_Store
+**/.DS_Store
+.terraform.lock.hcl
+**/.terraform.lock.hcl
+terraform.tfstate
+**/terraform.tfstate
+**/terraform.tfstate.backup
+**/.terraform/
+aws/localstack/terraform/**/lambda/python/
+aws/localstack/terraform/**/lambda/lambda_layer_payload.zip
