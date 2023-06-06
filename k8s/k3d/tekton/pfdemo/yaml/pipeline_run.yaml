@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: PipelineRun
+metadata:
+  generateName: pfdemo-pipelinerun-
+spec:
+  serviceAccountName: docker-login
+  pipelineRef:
+    name: pfdemo-pipeline
+  params:
+    - name: TAG
+      value: latest
+  workspaces:
+    - name: linked-workspace
+      volumeClaimTemplate:
+        spec:
+          accessModes:
+            - ReadWriteOnce
+          resources:
+            requests:
+              storage: 10Gi

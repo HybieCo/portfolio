@@ -1,0 +1,37 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: nodejs-pipeline
+spec:
+  params:
+    - name: IMAGE
+      description: Image description
+      type: string
+      default: "docker.io/fogartyp/ci-cd-test"
+    - name: TAG
+      description: Preferred tag
+      default: latest
+  workspaces:
+    - name: linked-workspace
+  tasks:
+    - name: fetch-repository
+      taskRef:
+        name: git-clone
+      workspaces:
+        - name: output
+          workspace: linked-workspace
+    - name: build-push-image
+      taskRef:
+        name: buildah
+      runAfter:
+        - fetch-repository
+      workspaces:
+        - name: source
+          workspace: linked-workspace
+      params:
+        - name: IMAGE
+          value: "$(params.IMAGE):$(params.TAG)"
+        - name: CONTEXT
+          value: "src"
+        - name: FORMAT
+          value: "docker"

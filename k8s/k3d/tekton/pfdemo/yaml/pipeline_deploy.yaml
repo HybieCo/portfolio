@@ -1,0 +1,20 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: pfdemo-deploy
+spec:
+  params:
+  workspaces:
+    - name: linked-workspace
+  tasks:
+    - name: create-deployment
+      taskRef:
+        name: kubernetes-actions
+      params:
+        - name: script
+          value: |
+            kubectl apply --filename https://raw.githubusercontent.com/fogartyp/pfdemo/main/deploy.yaml
+            kubectl rollout restart deployments/pfdemo-deployment
+      workspaces:
+        - name: manifest-dir
+          workspace: linked-workspace
